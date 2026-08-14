@@ -16,10 +16,6 @@ class WorldTimeExplorer(tk.Tk):
     def __init__(self):
         super().__init__()
 
-        # -----------------------------------------------------
-        # WINDOW
-        # -----------------------------------------------------
-
         self.title("🌍 World Time Explorer")
         self.geometry("1250x760")
         self.minsize(1000, 650)
@@ -45,24 +41,33 @@ class WorldTimeExplorer(tk.Tk):
         self.stars = []
 
         self.animation_offset = 0
-
         self.sun_position = 0
-
         self.moon_position = 0
-
         self.twinkle_offset = 0
 
         self.is_day = True
 
         # -----------------------------------------------------
-        # CREATE APPLICATION
+        # CREATE UI
         # -----------------------------------------------------
 
         self.create_ui()
 
+        # -----------------------------------------------------
+        # CREATE STARS
+        # -----------------------------------------------------
+
         self.create_stars()
 
+        # -----------------------------------------------------
+        # INITIAL CLOCK UPDATE
+        # -----------------------------------------------------
+
         self.update_clock()
+
+        # -----------------------------------------------------
+        # BACKGROUND ANIMATION
+        # -----------------------------------------------------
 
         self.animate_background()
 
@@ -73,7 +78,7 @@ class WorldTimeExplorer(tk.Tk):
     def create_ui(self):
 
         # =====================================================
-        # BACKGROUND CANVAS
+        # BACKGROUND
         # =====================================================
 
         self.background_canvas = tk.Canvas(
@@ -117,9 +122,7 @@ class WorldTimeExplorer(tk.Tk):
             bg="#030712"
         )
 
-        title.pack(
-            pady=(22, 2)
-        )
+        title.pack(pady=(22, 2))
 
         subtitle = tk.Label(
             self.main_frame,
@@ -132,7 +135,7 @@ class WorldTimeExplorer(tk.Tk):
         subtitle.pack()
 
         # =====================================================
-        # SEARCH CONTAINER
+        # SEARCH
         # =====================================================
 
         search_container = tk.Frame(
@@ -148,26 +151,16 @@ class WorldTimeExplorer(tk.Tk):
             ipady=6
         )
 
-        # =====================================================
-        # SEARCH ICON
-        # =====================================================
-
-        search_icon = tk.Label(
+        tk.Label(
             search_container,
             text="🔍",
             font=("Segoe UI Emoji", 16),
             fg="#00e5ff",
             bg="#0b1726"
-        )
-
-        search_icon.pack(
+        ).pack(
             side="left",
             padx=(12, 5)
         )
-
-        # =====================================================
-        # SEARCH ENTRY
-        # =====================================================
 
         self.search_var = tk.StringVar()
 
@@ -193,8 +186,6 @@ class WorldTimeExplorer(tk.Tk):
             "Search country..."
         )
 
-        # Search events
-
         self.search_entry.bind(
             "<FocusIn>",
             self.clear_search_placeholder
@@ -214,7 +205,7 @@ class WorldTimeExplorer(tk.Tk):
         # CLEAR BUTTON
         # =====================================================
 
-        clear_button = tk.Button(
+        tk.Button(
             search_container,
             text="✕",
             font=("Segoe UI", 12, "bold"),
@@ -226,15 +217,13 @@ class WorldTimeExplorer(tk.Tk):
             borderwidth=0,
             cursor="hand2",
             command=self.clear_search
-        )
-
-        clear_button.pack(
+        ).pack(
             side="left",
             padx=8
         )
 
         # =====================================================
-        # CONTENT AREA
+        # CONTENT
         # =====================================================
 
         content = tk.Frame(
@@ -283,7 +272,7 @@ class WorldTimeExplorer(tk.Tk):
         )
 
         # =====================================================
-        # COUNTRY NAME
+        # COUNTRY
         # =====================================================
 
         self.country_label = tk.Label(
@@ -329,7 +318,7 @@ class WorldTimeExplorer(tk.Tk):
         )
 
         # =====================================================
-        # ANALOG CLOCK CANVAS
+        # ANALOG CLOCK
         # =====================================================
 
         self.canvas = tk.Canvas(
@@ -365,23 +354,21 @@ class WorldTimeExplorer(tk.Tk):
         )
 
         # =====================================================
-        # CURRENT TIME TITLE
+        # CURRENT TIME
         # =====================================================
 
-        current_title = tk.Label(
+        tk.Label(
             info_card,
             text="CURRENT TIME",
             font=("Segoe UI", 11, "bold"),
             fg="#66859e",
             bg="#081421"
-        )
-
-        current_title.pack(
+        ).pack(
             pady=(50, 5)
         )
 
         # =====================================================
-        # DIGITAL TIME
+        # DIGITAL CLOCK
         # =====================================================
 
         self.time_label = tk.Label(
@@ -397,7 +384,7 @@ class WorldTimeExplorer(tk.Tk):
         )
 
         # =====================================================
-        # FULL DATE
+        # DATE
         # =====================================================
 
         self.date_label = tk.Label(
@@ -441,7 +428,7 @@ class WorldTimeExplorer(tk.Tk):
         )
 
         # =====================================================
-        # LIVE STATUS
+        # LIVE
         # =====================================================
 
         self.status_label = tk.Label(
@@ -463,7 +450,7 @@ class WorldTimeExplorer(tk.Tk):
         self.period_label = tk.Label(
             info_card,
             text="",
-            font=("Segoe UI", 12, "bold"),
+            font=("Segoe UI", 13, "bold"),
             fg="#ffd166",
             bg="#081421"
         )
@@ -508,17 +495,11 @@ class WorldTimeExplorer(tk.Tk):
 
             return
 
-        results = []
-
-        for country in COUNTRIES.keys():
-
-            if query in country.lower():
-
-                results.append(
-                    country
-                )
-
-        self.search_results = results[:8]
+        self.search_results = [
+            country
+            for country in COUNTRIES
+            if query in country.lower()
+        ][:8]
 
         self.show_search_results()
 
@@ -550,7 +531,7 @@ class WorldTimeExplorer(tk.Tk):
 
             data = COUNTRIES[country]
 
-            button = tk.Button(
+            tk.Button(
                 self.results_frame,
                 text=f"{data['flag']}  {country}",
                 font=("Segoe UI", 11),
@@ -564,27 +545,23 @@ class WorldTimeExplorer(tk.Tk):
                 width=35,
                 cursor="hand2",
                 command=lambda c=country: self.select_country(c)
-            )
-
-            button.pack(
+            ).pack(
                 fill="x",
                 padx=3,
                 pady=1
             )
 
     # =========================================================
-    # HIDE SEARCH RESULTS
+    # HIDE RESULTS
     # =========================================================
 
     def hide_search_results(self):
 
-        if hasattr(
-            self,
-            "results_frame"
-        ):
+        if hasattr(self, "results_frame"):
 
             try:
                 self.results_frame.destroy()
+
             except tk.TclError:
                 pass
 
@@ -601,33 +578,17 @@ class WorldTimeExplorer(tk.Tk):
 
         data = COUNTRIES[country]
 
-        # -----------------------------------------------------
-        # COUNTRY NAME
-        # -----------------------------------------------------
-
         self.country_label.config(
             text=country
         )
-
-        # -----------------------------------------------------
-        # FLAG
-        # -----------------------------------------------------
 
         self.flag_label.config(
             text=data["flag"]
         )
 
-        # -----------------------------------------------------
-        # TIMEZONE
-        # -----------------------------------------------------
-
         self.location_label.config(
             text=data["timezone"]
         )
-
-        # -----------------------------------------------------
-        # SEARCH BOX
-        # -----------------------------------------------------
 
         self.search_var.set(
             country
@@ -637,19 +598,21 @@ class WorldTimeExplorer(tk.Tk):
             fg="white"
         )
 
-        # -----------------------------------------------------
-        # HIDE SEARCH RESULTS
-        # -----------------------------------------------------
-
         self.hide_search_results()
 
         # -----------------------------------------------------
-        # RESET ANIMATION
+        # RESET ANIMATIONS
         # -----------------------------------------------------
 
         self.sun_position = 0
-
         self.moon_position = 0
+
+        # -----------------------------------------------------
+        # IMPORTANT:
+        # UPDATE IMMEDIATELY AFTER COUNTRY CHANGE
+        # -----------------------------------------------------
+
+        self.update_clock()
 
     # =========================================================
     # SELECT FIRST RESULT
@@ -701,10 +664,6 @@ class WorldTimeExplorer(tk.Tk):
 
         frame.pack_propagate(False)
 
-        # -----------------------------------------------------
-        # VALUE
-        # -----------------------------------------------------
-
         value = tk.Label(
             frame,
             text="--",
@@ -717,19 +676,13 @@ class WorldTimeExplorer(tk.Tk):
             pady=(8, 0)
         )
 
-        # -----------------------------------------------------
-        # LABEL
-        # -----------------------------------------------------
-
-        label = tk.Label(
+        tk.Label(
             frame,
             text=title,
             font=("Segoe UI", 8, "bold"),
             fg="#66859e",
             bg="#102438"
-        )
-
-        label.pack()
+        ).pack()
 
         return value
 
@@ -753,43 +706,20 @@ class WorldTimeExplorer(tk.Tk):
 
         for _ in range(120):
 
-            x = random.randint(
-                0,
-                width
-            )
-
-            y = random.randint(
-                0,
-                height
-            )
-
-            size = random.choice(
-                [1, 1, 1, 2, 2, 3]
-            )
-
-            speed = random.uniform(
-                0.1,
-                0.5
-            )
-
-            self.stars.append(
-                [
-                    x,
-                    y,
-                    size,
-                    speed
-                ]
-            )
+            self.stars.append([
+                random.randint(0, width),
+                random.randint(0, height),
+                random.choice([1, 1, 1, 2, 2, 3]),
+                random.uniform(0.1, 0.5)
+            ])
 
     # =========================================================
-    # ADVANCED BACKGROUND ANIMATION
+    # BACKGROUND ANIMATION
     # =========================================================
 
     def animate_background(self):
 
-        self.background_canvas.delete(
-            "all"
-        )
+        self.background_canvas.delete("all")
 
         width = self.winfo_width()
 
@@ -802,40 +732,48 @@ class WorldTimeExplorer(tk.Tk):
             height = 760
 
         # =====================================================
-        # GET COUNTRY TIME
+        # GET CURRENT COUNTRY TIME
         # =====================================================
 
         try:
 
-            data = COUNTRIES[
+            timezone = COUNTRIES[
                 self.selected_country
-            ]
+            ]["timezone"]
 
             current_time = datetime.now(
-                ZoneInfo(
-                    data["timezone"]
-                )
+                ZoneInfo(timezone)
             )
 
             hour = current_time.hour
 
+            minute = current_time.minute
+
+            # -------------------------------------------------
+            # MORE ACCURATE DAY/NIGHT CALCULATION
+            # -------------------------------------------------
+
+            total_minutes = (
+                hour * 60
+                + minute
+            )
+
+            self.is_day = (
+                6 * 60
+                <= total_minutes
+                <
+                18 * 60
+            )
+
         except Exception:
 
-            hour = 12
-
-        # =====================================================
-        # DAY / NIGHT
-        # =====================================================
-
-        self.is_day = 6 <= hour < 18
+            self.is_day = True
 
         # =====================================================
         # STARS
         # =====================================================
 
-        for index, star in enumerate(
-            self.stars
-        ):
+        for index, star in enumerate(self.stars):
 
             x, y, size, speed = star
 
@@ -850,21 +788,12 @@ class WorldTimeExplorer(tk.Tk):
                     height
                 )
 
-            # -------------------------------------------------
-            # TWINKLE
-            # -------------------------------------------------
-
             twinkle = (
                 math.sin(
                     self.twinkle_offset * 0.08
                     + index
-                )
-                + 1
+                ) + 1
             ) / 2
-
-            # -------------------------------------------------
-            # DAY STAR SIZE
-            # -------------------------------------------------
 
             if self.is_day:
 
@@ -877,10 +806,7 @@ class WorldTimeExplorer(tk.Tk):
 
                 star_size = max(
                     1,
-                    int(
-                        size
-                        + twinkle * 2
-                    )
+                    int(size + twinkle * 2)
                 )
 
             self.background_canvas.create_oval(
@@ -918,10 +844,6 @@ class WorldTimeExplorer(tk.Tk):
                 ) * 20
             )
 
-            # -------------------------------------------------
-            # SUN GLOW
-            # -------------------------------------------------
-
             for radius in range(
                 90,
                 20,
@@ -936,10 +858,6 @@ class WorldTimeExplorer(tk.Tk):
                     outline="#163a4c"
                 )
 
-            # -------------------------------------------------
-            # SUN
-            # -------------------------------------------------
-
             self.background_canvas.create_oval(
                 sun_x - 28,
                 sun_y - 28,
@@ -948,10 +866,6 @@ class WorldTimeExplorer(tk.Tk):
                 fill="#ffd166",
                 outline=""
             )
-
-            # -------------------------------------------------
-            # INNER GLOW
-            # -------------------------------------------------
 
             self.background_canvas.create_oval(
                 sun_x - 20,
@@ -988,10 +902,6 @@ class WorldTimeExplorer(tk.Tk):
                 ) * 25
             )
 
-            # -------------------------------------------------
-            # MOON GLOW
-            # -------------------------------------------------
-
             for radius in range(
                 75,
                 20,
@@ -1006,10 +916,6 @@ class WorldTimeExplorer(tk.Tk):
                     outline="#141c3b"
                 )
 
-            # -------------------------------------------------
-            # MOON
-            # -------------------------------------------------
-
             self.background_canvas.create_oval(
                 moon_x - 27,
                 moon_y - 27,
@@ -1018,10 +924,6 @@ class WorldTimeExplorer(tk.Tk):
                 fill="#e8edf7",
                 outline=""
             )
-
-            # -------------------------------------------------
-            # MOON SHADOW
-            # -------------------------------------------------
 
             self.background_canvas.create_oval(
                 moon_x - 14,
@@ -1033,11 +935,10 @@ class WorldTimeExplorer(tk.Tk):
             )
 
         # =====================================================
-        # LARGE BACKGROUND GLOW
+        # BACKGROUND GLOW
         # =====================================================
 
         center_x = width - 80
-
         center_y = height - 80
 
         for radius in range(
@@ -1055,16 +956,11 @@ class WorldTimeExplorer(tk.Tk):
             )
 
         # =====================================================
-        # ANIMATION COUNTERS
+        # COUNTERS
         # =====================================================
 
         self.animation_offset += 1
-
         self.twinkle_offset += 1
-
-        # =====================================================
-        # REPEAT ANIMATION
-        # =====================================================
 
         self.after(
             40,
@@ -1080,20 +976,12 @@ class WorldTimeExplorer(tk.Tk):
         current_time
     ):
 
-        self.canvas.delete(
-            "all"
-        )
-
-        # =====================================================
-        # CLOCK SIZE
-        # =====================================================
+        self.canvas.delete("all")
 
         width = 320
-
         height = 320
 
         center_x = width / 2
-
         center_y = height / 2
 
         radius = 125
@@ -1138,9 +1026,7 @@ class WorldTimeExplorer(tk.Tk):
         # DAY / NIGHT ARC
         # =====================================================
 
-        hour = current_time.hour
-
-        if 6 <= hour < 18:
+        if self.is_day:
 
             self.canvas.create_arc(
                 center_x - radius + 8,
@@ -1176,8 +1062,6 @@ class WorldTimeExplorer(tk.Tk):
                 h * 30 - 90
             )
 
-            # Outer point
-
             x1 = (
                 center_x
                 + math.cos(angle)
@@ -1189,8 +1073,6 @@ class WorldTimeExplorer(tk.Tk):
                 + math.sin(angle)
                 * (radius - 9)
             )
-
-            # Inner point
 
             x2 = (
                 center_x
@@ -1212,10 +1094,6 @@ class WorldTimeExplorer(tk.Tk):
                 fill="#8ed8e8",
                 width=3
             )
-
-            # -------------------------------------------------
-            # NUMBER
-            # -------------------------------------------------
 
             number_x = (
                 center_x
@@ -1288,13 +1166,11 @@ class WorldTimeExplorer(tk.Tk):
             )
 
         # =====================================================
-        # CURRENT TIME
+        # TIME
         # =====================================================
 
         hour = current_time.hour % 12
-
         minute = current_time.minute
-
         second = current_time.second
 
         # =====================================================
@@ -1305,18 +1181,16 @@ class WorldTimeExplorer(tk.Tk):
             (hour + minute / 60) * 30 - 90
         )
 
-        hour_length = 65
-
         hour_x = (
             center_x
             + math.cos(hour_angle)
-            * hour_length
+            * 65
         )
 
         hour_y = (
             center_y
             + math.sin(hour_angle)
-            * hour_length
+            * 65
         )
 
         self.canvas.create_line(
@@ -1337,18 +1211,16 @@ class WorldTimeExplorer(tk.Tk):
             (minute + second / 60) * 6 - 90
         )
 
-        minute_length = 95
-
         minute_x = (
             center_x
             + math.cos(minute_angle)
-            * minute_length
+            * 95
         )
 
         minute_y = (
             center_y
             + math.sin(minute_angle)
-            * minute_length
+            * 95
         )
 
         self.canvas.create_line(
@@ -1369,18 +1241,16 @@ class WorldTimeExplorer(tk.Tk):
             second * 6 - 90
         )
 
-        second_length = 110
-
         second_x = (
             center_x
             + math.cos(second_angle)
-            * second_length
+            * 110
         )
 
         second_y = (
             center_y
             + math.sin(second_angle)
-            * second_length
+            * 110
         )
 
         self.canvas.create_line(
@@ -1416,19 +1286,6 @@ class WorldTimeExplorer(tk.Tk):
         )
 
     # =========================================================
-    # COUNTRY CHANGE
-    # =========================================================
-
-    def change_country(
-        self,
-        country
-    ):
-
-        self.select_country(
-            country
-        )
-
-    # =========================================================
     # UPDATE CLOCK
     # =========================================================
 
@@ -1437,7 +1294,7 @@ class WorldTimeExplorer(tk.Tk):
         try:
 
             # =================================================
-            # COUNTRY DATA
+            # COUNTRY
             # =================================================
 
             data = COUNTRIES[
@@ -1447,7 +1304,7 @@ class WorldTimeExplorer(tk.Tk):
             timezone = data["timezone"]
 
             # =================================================
-            # CURRENT COUNTRY TIME
+            # COUNTRY LOCAL TIME
             # =================================================
 
             current_time = datetime.now(
@@ -1479,9 +1336,7 @@ class WorldTimeExplorer(tk.Tk):
             # =================================================
 
             self.day_box.config(
-                text=current_time.strftime(
-                    "%d"
-                )
+                text=current_time.strftime("%d")
             )
 
             # =================================================
@@ -1489,9 +1344,7 @@ class WorldTimeExplorer(tk.Tk):
             # =================================================
 
             self.month_box.config(
-                text=current_time.strftime(
-                    "%B"
-                )
+                text=current_time.strftime("%B")
             )
 
             # =================================================
@@ -1499,9 +1352,7 @@ class WorldTimeExplorer(tk.Tk):
             # =================================================
 
             self.year_box.config(
-                text=current_time.strftime(
-                    "%Y"
-                )
+                text=current_time.strftime("%Y")
             )
 
             # =================================================
@@ -1509,8 +1360,26 @@ class WorldTimeExplorer(tk.Tk):
             # =================================================
 
             hour = current_time.hour
+            minute = current_time.minute
 
-            if 6 <= hour < 18:
+            total_minutes = (
+                hour * 60
+                + minute
+            )
+
+            # -------------------------------------------------
+            # DAY = 06:00 - 17:59
+            # NIGHT = 18:00 - 05:59
+            # -------------------------------------------------
+
+            if (
+                6 * 60
+                <= total_minutes
+                <
+                18 * 60
+            ):
+
+                self.is_day = True
 
                 self.period_label.config(
                     text="☀ DAY TIME",
@@ -1519,13 +1388,15 @@ class WorldTimeExplorer(tk.Tk):
 
             else:
 
+                self.is_day = False
+
                 self.period_label.config(
                     text="🌙 NIGHT TIME",
                     fg="#a8b9ff"
                 )
 
             # =================================================
-            # ANALOG CLOCK
+            # DRAW ANALOG CLOCK
             # =================================================
 
             self.draw_clock(
@@ -1540,7 +1411,7 @@ class WorldTimeExplorer(tk.Tk):
             )
 
         # =====================================================
-        # UPDATE EVERY SECOND
+        # RUN AGAIN AFTER 1 SECOND
         # =====================================================
 
         self.after(
